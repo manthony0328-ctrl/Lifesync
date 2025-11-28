@@ -67,11 +67,14 @@ Be concise, helpful, and encouraging. Keep responses under 150 words.`;
     max_tokens: 256,
     messages: [
       {
+        role: "system",
+        content: systemPrompt
+      },
+      {
         role: "user",
         content: userMessage
       }
-    ],
-    system: systemPrompt
+    ]
   });
 
   const content = message.choices[0].message.content;

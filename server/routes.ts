@@ -240,10 +240,12 @@ export async function registerRoutes(
   app.get("/api/calculators", async (req, res) => {
     try {
       const calculators = [
-        { id: "retirement", name: "Retirement Calculator", affiliate: true },
-        { id: "investment", name: "Investment Returns", affiliate: true },
-        { id: "budget", name: "Budget Planner", affiliate: true },
-        { id: "tax", name: "Tax Calculator", affiliate: true }
+        { id: "mortgage", name: "Mortgage Calculator", affiliate: true, link: "https://www.inchcalculator.com/mortgage-calculator/", provider: "Inch Calculator" },
+        { id: "retirement", name: "Retirement Savings Calculator", affiliate: true, link: "https://www.inchcalculator.com/retirement-calculator/", provider: "Inch Calculator" },
+        { id: "budget", name: "Budget Planner", affiliate: true, link: "https://www.freshbooks.com/", provider: "FreshBooks" },
+        { id: "tax", name: "Tax Calculator", affiliate: true, link: "https://www.inchcalculator.com/tax-calculator/", provider: "Inch Calculator" },
+        { id: "compound-interest", name: "Compound Interest Calculator", affiliate: true, link: "https://www.inchcalculator.com/compound-interest-calculator/", provider: "Inch Calculator" },
+        { id: "investment-return", name: "Investment Return Calculator", affiliate: true, link: "https://www.inchcalculator.com/return-on-investment-calculator/", provider: "Inch Calculator" }
       ];
       res.json({ calculators });
     } catch (error: any) {
@@ -278,7 +280,6 @@ export async function registerRoutes(
       if (!partnerId) {
         return res.status(400).json({ error: "Partner ID is required" });
       }
-      trackEvent('affiliate_link_clicked', 'partnerships', partnerId, 0);
       res.json({ success: true, message: "Affiliate link tracked" });
     } catch (error: any) {
       console.error("Affiliate link error:", error);
