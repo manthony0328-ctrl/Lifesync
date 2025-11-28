@@ -62,10 +62,50 @@ export const payments = pgTable("payments", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Goals and tasks for tracking
+export const goals = pgTable("goals", {
+  id: varchar("id", { length: 36 }).primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id).notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  category: text("category").notNull(), // finance, health, productivity, learning
+  targetDate: timestamp("target_date"),
+  completed: boolean("completed").default(false),
+  rewardPoints: integer("reward_points").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// User rewards and achievements
+export const rewards = pgTable("rewards", {
+  id: varchar("id", { length: 36 }).primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id).notNull(),
+  totalPoints: integer("total_points").default(0),
+  level: integer("level").default(1),
+  achievements: text("achievements").default('[]'), // JSON array of achievement IDs
+  lastMilestone: text("last_milestone"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Mini-games for cognitive improvement
+export const minigames = pgTable("minigames", {
+  id: varchar("id", { length: 36 }).primaryKey().default(sql`gen_random_uuid()`),
+  userId: varchar("user_id", { length: 36 }).references(() => users.id).notNull(),
+  gameType: text("game_type").notNull(), // memory, logic, math, pattern
+  score: integer("score").default(0),
+  timeSpent: integer("time_spent").default(0), // seconds
+  difficulty: text("difficulty").default("medium"), // easy, medium, hard
+  completed: boolean("completed").default(false),
+  pointsEarned: integer("points_earned").default(0),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({
   subscriptions: many(subscriptions),
   payments: many(payments),
+  goals: many(goals),
+  rewards: many(rewards),
+  minigames: many(minigames),
 }));
 
 export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
@@ -78,6 +118,27 @@ export const subscriptionsRelations = relations(subscriptions, ({ one }) => ({
 export const paymentsRelations = relations(payments, ({ one }) => ({
   user: one(users, {
     fields: [payments.userId],
+    references: [users.id],
+  }),
+}));
+
+export const goalsRelations = relations(goals, ({ one }) => ({
+  user: one(users, {
+    fields: [goals.userId],
+    references: [users.id],
+  }),
+}));
+
+export const rewardsRelations = relations(rewards, ({ one }) => ({
+  user: one(users, {
+    fields: [rewards.userId],
+    references: [users.id],
+  }),
+}));
+
+export const minigamesRelations = relations(minigames, ({ one }) => ({
+  user: one(users, {
+    fields: [minigames.userId],
     references: [users.id],
   }),
 }));
@@ -110,6 +171,21 @@ export const insertPaymentSchema = createInsertSchema(payments).omit({
   createdAt: true,
 });
 
+export const insertGoalSchema = createInsertSchema(goals).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertRewardSchema = createInsertSchema(rewards).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertMinigameSchema = createInsertSchema(minigames).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -125,6 +201,15 @@ export type Newsletter = typeof newsletters.$inferSelect;
 
 export type InsertPayment = z.infer<typeof insertPaymentSchema>;
 export type Payment = typeof payments.$inferSelect;
+
+export type InsertGoal = z.infer<typeof insertGoalSchema>;
+export type Goal = typeof goals.$inferSelect;
+
+export type InsertReward = z.infer<typeof insertRewardSchema>;
+export type Reward = typeof rewards.$inferSelect;
+
+export type InsertMinigame = z.infer<typeof insertMinigameSchema>;
+export type Minigame = typeof minigames.$inferSelect;
 
 // Pricing plans configuration
 export const PRICING_PLANS = {
