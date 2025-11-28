@@ -8,10 +8,47 @@ import { insertContactSchema, insertNewsletterSchema, PRICING_PLANS } from "@sha
 import { generateAIResponse, generateGoalRecommendations, generateFinancialInsights } from "./aiClient";
 import { z } from "zod";
 
+// Password protection middleware
+function verifyPassword(req: any, res: any, next: any) {
+  const token = req.headers.authorization?.replace('Bearer ', '');
+  const validToken = process.env.PASSWORD_TOKEN || 'default-token-change-me';
+  
+  if (token !== validToken && req.path !== '/api/auth/password' && !req.path.startsWith('/api/stripe')) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  next();
+}
+
 export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  
+  // Password authentication endpoint
+  app.post("/api/auth/password", async (req, res) => {
+    try {
+      const { password } = req.body;
+      const correctPassword = process.env.SITE_PASSWORD || 'lifesync123';
+      
+      if (password === correctPassword) {
+        const token = process.env.PASSWORD_TOKEN || `token-${Date.now()}`;
+        res.json({ token });
+      } else {
+        res.status(401).json({ error: 'Invalid password' });
+      }
+    } catch (error: any) {
+      console.error("Password auth error:", error);
+      res.status(500).json({ error: "Authentication failed" });
+    }
+  });
+
+  // Apply password protection to API routes (except password and webhook routes)
+  app.use((req, res, next) => {
+    if (req.path === '/api/auth/password' || req.path.includes('/api/stripe/webhook')) {
+      return next();
+    }
+    verifyPassword(req, res, next);
+  });
   
   // Get Stripe publishable key for frontend
   app.get("/api/stripe/config", async (req, res) => {
