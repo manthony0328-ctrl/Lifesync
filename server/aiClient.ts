@@ -17,7 +17,7 @@ export async function generateGoalRecommendations(userContext: string): Promise<
   const openai = getAIClient();
   
   const message = await openai.chat.completions.create({
-    model: "gpt-4-mini",
+    model: "gpt-3.5-turbo",
     max_tokens: 1024,
     messages: [
       {
@@ -38,7 +38,7 @@ export async function generateFinancialInsights(financialData: string): Promise<
   const openai = getAIClient();
   
   const message = await openai.chat.completions.create({
-    model: "gpt-4-mini",
+    model: "gpt-3.5-turbo",
     max_tokens: 1024,
     messages: [
       {
@@ -63,7 +63,7 @@ ${context ? `User context: ${context}` : ""}
 Be concise, helpful, and encouraging. Keep responses under 150 words.`;
 
   const message = await openai.chat.completions.create({
-    model: "gpt-4-mini",
+    model: "gpt-3.5-turbo",
     max_tokens: 256,
     messages: [
       {
@@ -88,7 +88,7 @@ export async function analyzeGoalProgress(goalDescription: string, progress: num
   const openai = getAIClient();
   
   const message = await openai.chat.completions.create({
-    model: "gpt-4-mini",
+    model: "gpt-3.5-turbo",
     max_tokens: 512,
     messages: [
       {
