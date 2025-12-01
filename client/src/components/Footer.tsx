@@ -6,36 +6,25 @@ const footerLinks = {
     { label: "Features", href: "#features" },
     { label: "Pricing", href: "#pricing" },
     { label: "Dashboard", href: "/dashboard" },
-    { label: "Integrations", href: "#" },
-    { label: "API", href: "#" },
+    { label: "Affiliates", href: "/affiliates" },
   ],
   company: [
     { label: "About", href: "#about" },
-    { label: "Blog", href: "#" },
-    { label: "Careers", href: "#" },
-    { label: "Press", href: "#" },
     { label: "Contact", href: "#contact" },
   ],
   resources: [
-    { label: "Documentation", href: "#" },
-    { label: "Help Center", href: "#" },
-    { label: "Community", href: "#" },
-    { label: "Templates", href: "#" },
-    { label: "Webinars", href: "#" },
   ],
   legal: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
-    { label: "Cookie Policy", href: "#" },
-    { label: "GDPR", href: "#" },
   ],
 };
 
 const socialLinks = [
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Linkedin, href: "#", label: "LinkedIn" },
-  { icon: Github, href: "#", label: "GitHub" },
-  { icon: Instagram, href: "#", label: "Instagram" },
+  { icon: Twitter, href: "https://twitter.com/lifesyncpro", label: "Twitter" },
+  { icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+  { icon: Github, href: "https://github.com", label: "GitHub" },
+  { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
 ];
 
 export function Footer() {
@@ -52,7 +41,7 @@ export function Footer() {
   return (
     <footer className="bg-slate-900 text-white py-16 md:py-20">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-8 lg:gap-12 mb-12">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 mb-12">
           <div className="col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-4" data-testid="link-footer-home">
               <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-blue-400 flex items-center justify-center">
@@ -69,6 +58,8 @@ export function Footer() {
                 <a
                   key={index}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors"
                   aria-label={social.label}
                   data-testid={`link-social-${social.label.toLowerCase()}`}
@@ -107,23 +98,6 @@ export function Footer() {
                     onClick={(e) => scrollToSection(e, link.href)}
                     className="text-gray-400 hover:text-white transition-colors text-sm"
                     data-testid={`link-footer-company-${index}`}
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="font-semibold mb-4 text-sm uppercase tracking-wider text-gray-400">Resources</h3>
-            <ul className="space-y-3">
-              {footerLinks.resources.map((link, index) => (
-                <li key={index}>
-                  <a
-                    href={link.href}
-                    className="text-gray-400 hover:text-white transition-colors text-sm"
-                    data-testid={`link-footer-resources-${index}`}
                   >
                     {link.label}
                   </a>
